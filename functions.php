@@ -643,3 +643,21 @@ function itsupportbee_search_form( $form ) {
     return ob_get_clean();
 }
 add_filter( 'get_search_form', 'itsupportbee_search_form' );
+
+
+/**
+ * ============================================================
+ * Progressive Web App (PWA) support — Settings → PWA
+ * ------------------------------------------------------------
+ * Add this whole block to functions.php. Registers a "Case Study"
+ * post type and a "Testimonial" post type, both of which are used
+ * on the homepage and services pages.
+ * ============================================================
+ */
+wp_enqueue_script(
+    'itsb-pwa',
+    get_template_directory_uri() . '/assets/js/pwa.js',
+    [],
+    filemtime(get_template_directory() . '/assets/js/pwa.js'),
+    true
+);

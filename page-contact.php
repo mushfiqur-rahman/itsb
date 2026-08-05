@@ -26,7 +26,7 @@
 <div class="reveal rounded-lg border border-hive p-7 md:p-9">
   <h2 class="font-display font-bold text-[20px] mb-6">Send a message</h2>
  
-  <?php echo do_shortcode( '[contact-form-7 id="04a06de" title="Contact form-1"]' ); ?>
+  <?php echo do_shortcode( '[contact-form-7 id="1845cb3" title="Contact form 1"]' ); ?>
  
 </div>
 
@@ -44,6 +44,12 @@
         <li class="flex items-center gap-3">
           <span class="hex w-6 h-6 bg-ink shrink-0"></span>
           <a href="#" class="hover:text-honeydark transition-colors">Schedule a free consultation</a>
+        </li>
+        <li class="flex items-center gap-3">
+          <span class="hex w-6 h-6 bg-green-500 shrink-0"></span>
+          <a href="https://wa.me/447988585324?text=<?php echo rawurlencode('Hello IT Support Bee, I need IT support.'); ?>" target="_blank" rel="noopener noreferrer" class="hover:text-honeydark transition-colors">
+    Chat on WhatsApp
+</a>
         </li>
         
       </ul>

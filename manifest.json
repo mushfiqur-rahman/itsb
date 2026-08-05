@@ -1,0 +1,28 @@
+{
+  "name": "IT Support Bee",
+  "short_name": "ITSB",
+  "description": "Remote IT Support, Microsoft 365 & Google Workspace",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F5F5F1",
+  "theme_color": "#2D058A",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/wp-content/themes/itsupportbee/assets/images/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/wp-content/themes/itsupportbee/assets/images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/wp-content/themes/itsupportbee/assets/images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
