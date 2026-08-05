@@ -26,7 +26,7 @@
 <div class="reveal rounded-lg border border-hive p-7 md:p-9">
   <h2 class="font-display font-bold text-[20px] mb-6">Send a message</h2>
  
-  <?php echo do_shortcode( '[contact-form-7 id="5e60b22" title="Contact form 1"]' ); ?>
+  <?php echo do_shortcode( '[contact-form-7 id="04a06de" title="Contact form-1"]' ); ?>
  
 </div>
 
