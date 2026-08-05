@@ -16,6 +16,7 @@ function itsupportbee_assets() {
         filemtime(get_template_directory() . '/assets/css/output.css')
     );
 }
+
 add_action('wp_enqueue_scripts', 'itsupportbee_assets');
 
 
@@ -67,6 +68,13 @@ function itsupportbee_setup() {
         'primary' => __( 'Primary Menu', 'itsupportbee' ),
         'footer'  => __( 'Footer Menu', 'itsupportbee' ),
     ) );
+    add_theme_support( 'custom-logo', array(
+    'height'      => 80,
+    'width'       => 80,
+    'flex-height' => true,
+    'flex-width'  => true,
+) );
+ 
 }
 add_action( 'after_setup_theme', 'itsupportbee_setup' );
 
@@ -75,6 +83,23 @@ add_action( 'after_setup_theme', 'itsupportbee_setup' );
 if ( ! isset( $content_width ) ) {
     $content_width = 1152;
 }
+
+
+
+/**
+ * Add this to functions.php, alongside itsupportbee_assets().
+ * Loads Font Awesome (Brands set is all you need for the footer icons,
+ * but the full free CSS is simplest to enqueue as one file).
+ */
+function itsupportbee_fontawesome() {
+    wp_enqueue_style(
+        'font-awesome',
+        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css',
+        [],
+        '6.5.2'
+    );
+}
+add_action( 'wp_enqueue_scripts', 'itsupportbee_fontawesome' );
 
 
 // ============================================================
@@ -440,3 +465,181 @@ function itsupportbee_output_schema( $data ) {
         wp_json_encode( $data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) .
         '</script>' . "\n";
 }
+
+
+/**
+ * ============================================================
+ * TRACKING CODES — Settings → Tracking Codes
+ * ------------------------------------------------------------
+ * Add this whole block to functions.php. Creates one settings
+ * page where you paste in your GA4, GTM, Bing, and Yandex IDs —
+ * nothing hardcoded in template files, so updating an ID later
+ * is a wp-admin form, not a code edit.
+ * ============================================================
+ */
+
+// ---------- Register the settings ----------
+function itsupportbee_tracking_settings_init() {
+    register_setting( 'itsupportbee_tracking', 'itsb_ga4_id' );
+    register_setting( 'itsupportbee_tracking', 'itsb_gtm_id' );
+    register_setting( 'itsupportbee_tracking', 'itsb_bing_verification' );
+    register_setting( 'itsupportbee_tracking', 'itsb_yandex_verification' );
+}
+add_action( 'admin_init', 'itsupportbee_tracking_settings_init' );
+
+// ---------- Add the settings page under Settings ----------
+function itsupportbee_tracking_settings_menu() {
+    add_options_page(
+        'Tracking Codes',
+        'Tracking Codes',
+        'manage_options',
+        'itsb-tracking-codes',
+        'itsupportbee_tracking_settings_page'
+    );
+}
+add_action( 'admin_menu', 'itsupportbee_tracking_settings_menu' );
+
+function itsupportbee_tracking_settings_page() {
+    ?>
+    <div class="wrap">
+        <h1>Tracking Codes</h1>
+        <p>Paste in IDs from each service. Leave any field blank to skip it — nothing outputs unless it's filled in.</p>
+        <form method="post" action="options.php">
+            <?php settings_fields( 'itsupportbee_tracking' ); ?>
+            <table class="form-table">
+                <tr>
+                    <th><label for="itsb_ga4_id">Google Analytics 4 — Measurement ID</label></th>
+                    <td>
+                        <input type="text" id="itsb_ga4_id" name="itsb_ga4_id" value="<?php echo esc_attr( get_option( 'itsb_ga4_id' ) ); ?>" class="regular-text" placeholder="G-XXXXXXXXXX">
+                        <p class="description">Found in GA4 → Admin → Data Streams → your stream.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="itsb_gtm_id">Google Tag Manager — Container ID</label></th>
+                    <td>
+                        <input type="text" id="itsb_gtm_id" name="itsb_gtm_id" value="<?php echo esc_attr( get_option( 'itsb_gtm_id' ) ); ?>" class="regular-text" placeholder="GTM-XXXXXXX">
+                        <p class="description">If you use GTM, manage GA4 and other tags INSIDE Tag Manager instead of filling in the GA4 field above too — running both directly causes duplicate pageviews.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="itsb_bing_verification">Bing Webmaster — Verification code</label></th>
+                    <td>
+                        <input type="text" id="itsb_bing_verification" name="itsb_bing_verification" value="<?php echo esc_attr( get_option( 'itsb_bing_verification' ) ); ?>" class="regular-text" placeholder="content value only, not the full meta tag">
+                        <p class="description">From Bing Webmaster Tools → Settings → Ownership Verification → "Meta tag" option, paste just the content="" value.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="itsb_yandex_verification">Yandex Webmaster — Verification code</label></th>
+                    <td>
+                        <input type="text" id="itsb_yandex_verification" name="itsb_yandex_verification" value="<?php echo esc_attr( get_option( 'itsb_yandex_verification' ) ); ?>" class="regular-text" placeholder="content value only">
+                        <p class="description">From Yandex Webmaster → site → "Meta tag" verification method.</p>
+                    </td>
+                </tr>
+            </table>
+            <?php submit_button( 'Save Tracking Codes' ); ?>
+        </form>
+    </div>
+    <?php
+}
+
+// ---------- Output: <head> section (verification meta tags, GA4, GTM head script) ----------
+function itsupportbee_tracking_head() {
+    $ga4_id    = get_option( 'itsb_ga4_id' );
+    $gtm_id    = get_option( 'itsb_gtm_id' );
+    $bing      = get_option( 'itsb_bing_verification' );
+    $yandex    = get_option( 'itsb_yandex_verification' );
+
+    if ( $bing ) {
+        echo '<meta name="msvalidate.01" content="' . esc_attr( $bing ) . '">' . "\n";
+    }
+    if ( $yandex ) {
+        echo '<meta name="yandex-verification" content="' . esc_attr( $yandex ) . '">' . "\n";
+    }
+
+    // GTM takes priority — if both GTM and a direct GA4 ID are filled in,
+    // only load GTM to avoid double-counting pageviews (GA4 should be
+    // configured as a tag inside GTM instead in that case).
+    if ( $gtm_id ) {
+        ?>
+        <script>
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','<?php echo esc_js( $gtm_id ); ?>');
+        </script>
+        <?php
+    } elseif ( $ga4_id ) {
+        ?>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo esc_attr( $ga4_id ); ?>"></script>
+        <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '<?php echo esc_js( $ga4_id ); ?>');
+        </script>
+        <?php
+    }
+}
+add_action( 'wp_head', 'itsupportbee_tracking_head', 2 ); // after meta tags (priority 1), before schema
+
+// ---------- Output: GTM noscript fallback, must sit right after <body> ----------
+function itsupportbee_tracking_body_open() {
+    $gtm_id = get_option( 'itsb_gtm_id' );
+    if ( $gtm_id ) {
+        ?>
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=<?php echo esc_attr( $gtm_id ); ?>"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <?php
+    }
+}
+add_action( 'wp_body_open', 'itsupportbee_tracking_body_open' );
+
+
+/**
+ * Add this to functions.php.
+ * ------------------------------------------------------------
+ * Registers a widget area for the blog sidebar (so you can add/
+ * reorder widgets from Appearance → Widgets without touching code)
+ * and overrides WordPress's default search form markup with one
+ * that matches the site's design tokens.
+ */
+ 
+function itsupportbee_widgets_init() {
+    register_sidebar( array(
+        'name'          => 'Blog Sidebar',
+        'id'            => 'blog-sidebar',
+        'description'   => 'Appears on the blog listing and single post pages.',
+        'before_widget' => '<div class="reveal rounded-lg border border-hive p-5 mb-6">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h2 class="font-mono text-[11px] tracking-[0.06em] text-honeydark uppercase mb-4">',
+        'after_title'   => '</h2>',
+    ) );
+}
+add_action( 'widgets_init', 'itsupportbee_widgets_init' );
+ 
+ 
+/**
+ * Custom search form — WordPress calls this automatically via
+ * get_search_form() once a file named searchform.php exists in
+ * the theme root, but this function version can also be hooked
+ * in directly if you'd rather not rely on the file being found.
+ */
+function itsupportbee_search_form( $form ) {
+    $unique_id = 'search-' . wp_rand();
+    ob_start();
+    ?>
+    <form role="search" method="get" class="flex items-stretch gap-2" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+        <label for="<?php echo esc_attr( $unique_id ); ?>" class="sr-only">Search</label>
+        <input
+            type="search"
+            id="<?php echo esc_attr( $unique_id ); ?>"
+            class="flex-1 rounded-md border border-hive px-3 py-2.5 text-[13.5px] text-ink placeholder:text-slate focus-visible:outline-2 focus-visible:outline-honey"
+            placeholder="Search articles…"
+            value="<?php echo get_search_query(); ?>"
+            name="s"
+        />
+        <button type="submit" class="rounded-md bg-ink text-paper px-3.5 flex items-center justify-center hover:bg-honeydark transition-colors" aria-label="Submit search">
+            <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.6"/><path d="M18 18l-4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+    </form>
+    <?php
+    return ob_get_clean();
+}
+add_filter( 'get_search_form', 'itsupportbee_search_form' );

@@ -23,65 +23,14 @@
 <section class="max-w-6xl mx-auto px-6 py-14 grid md:grid-cols-[1.2fr_0.8fr] gap-10 items-start">
 
   <!-- CONTACT FORM -->
-  <div class="reveal rounded-lg border border-hive p-7 md:p-9 bg-white">
-    <h2 class="font-display font-bold text-[20px] mb-6">Send a message</h2>
+<div class="reveal rounded-lg border border-hive p-7 md:p-9">
+  <h2 class="font-display font-bold text-[20px] mb-6">Send a message</h2>
+ 
+  <?php echo do_shortcode( '[contact-form-7 id="5e60b22" title="Contact form 1"]' ); ?>
+ 
+</div>
 
-    <!--
-      ============================================================
-      WP NOTE — Replace the static <form> block below with:
-        [contact-form-7 id="123" title="Contact Form"]
-      Then paste this exact template into the CF7 admin editor so
-      field names match the styling hooks above one-for-one:
-      ============================================================
 
-      <p><label>Name*<br>[text* your-name]</label></p>
-      <p><label>Email*<br>[email* your-email]</label></p>
-      <p><label>Company Name<br>[text your-company]</label></p>
-      <p><label>Service Interested In*<br>
-        [select* your-service "Microsoft 365 Administration"
-          "Google Workspace Administration" "Cloud/Email Migration"
-          "Email Deliverability" "Remote IT Support" "Not Sure / Other"]
-      </label></p>
-      <p><label>Message*<br>[textarea* your-message]</label></p>
-      <p>[submit "Send Message"]</p>
-
-      Mail tab: set "To" as your inbox, and add {your-name} / {your-service}
-      into the Subject line so leads are pre-sorted by service.
-    -->
-    <form class="wpcf7-form space-y-1" action="#" method="post">
-      <p>
-        <label for="your-name">Name*</label>
-        <input type="text" id="your-name" name="your-name" required class="wpcf7-form-control">
-      </p>
-      <p>
-        <label for="your-email">Email*</label>
-        <input type="email" id="your-email" name="your-email" required class="wpcf7-form-control">
-      </p>
-      <p>
-        <label for="your-company">Company name</label>
-        <input type="text" id="your-company" name="your-company" class="wpcf7-form-control">
-      </p>
-      <p>
-        <label for="your-service">Service interested in*</label>
-        <select id="your-service" name="your-service" required class="wpcf7-select wpcf7-form-control">
-          <option value="">Select one</option>
-          <option>Microsoft 365 Administration</option>
-          <option>Google Workspace Administration</option>
-          <option>Cloud/Email Migration</option>
-          <option>Email Deliverability</option>
-          <option>Remote IT Support</option>
-          <option>Not Sure / Other</option>
-        </select>
-      </p>
-      <p>
-        <label for="your-message">Message*</label>
-        <textarea id="your-message" name="your-message" required class="wpcf7-form-control"></textarea>
-      </p>
-      <p>
-        <input type="submit" value="Send Message" class="wpcf7-submit">
-      </p>
-    </form>
-  </div>
 
   <!-- DIRECT CONTACT + REASSURANCE -->
   <div class="reveal space-y-8">
@@ -96,10 +45,7 @@
           <span class="hex w-6 h-6 bg-ink shrink-0"></span>
           <a href="#" class="hover:text-honeydark transition-colors">Schedule a free consultation</a>
         </li>
-        <li class="flex items-center gap-3">
-          <span class="hex w-6 h-6 bg-ink shrink-0"></span>
-          <a href="#" class="hover:text-honeydark transition-colors">View our Upwork profile</a>
-        </li>
+        
       </ul>
     </div>
 
@@ -112,6 +58,24 @@
       <p class="font-mono text-[11px] tracking-[0.06em] text-honeydark uppercase mb-2">Where we work</p>
       <p class="text-[14px] text-slate leading-relaxed">Remote IT support for businesses across the US, UK, Australia, and Europe, wherever your team is located.</p>
     </div>
+  </div>
+</section>
+
+  <!-- ============ MAP ============ -->
+<!-- Insert this section into your Contact page template, after the
+     form + direct-contact grid and before the FAQ section. -->
+<section class="max-w-6xl mx-auto px-6 pb-20">
+  <div class="reveal rounded-lg border border-hive overflow-hidden">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d158828.30880249548!2d-0.22481744999454065!3d51.53720283510586!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xaf628d6603d858bf%3A0x9a269c545e6eae7e!2sIT%20Support%20Bee!5e0!3m2!1sen!2sbd!4v1785921774428!5m2!1sen!2sbd"
+      width="100%"
+      height="360"
+      style="border:0; display:block;"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="strict-origin-when-cross-origin"
+      title="IT Support Bee location on Google Maps">
+    </iframe>
   </div>
 </section>
 
