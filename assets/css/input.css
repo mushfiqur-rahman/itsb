@@ -95,6 +95,27 @@ html {
   }
 }
 
+@layer components {
+  /* Dynamic Content Headings Fix */
+  .prose h2,
+  .entry-content h2,
+  h2.wp-block-heading {
+    @apply text-2xl sm:text-3xl font-bold text-slate-900 mt-8 mb-4 leading-snug block;
+  }
+
+  .prose h3,
+  .entry-content h3,
+  h3.wp-block-heading {
+    @apply text-xl sm:text-2xl font-bold text-slate-800 mt-6 mb-3 leading-snug block;
+  }
+
+  .prose h4,
+  .entry-content h4,
+  h4.wp-block-heading {
+    @apply text-lg font-semibold text-slate-800 mt-4 mb-2 block;
+  }
+}
+
 /* ============================================================
    Contact Form 7 — custom form styling
    ------------------------------------------------------------
